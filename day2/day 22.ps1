@@ -8,15 +8,9 @@ $points = @{
 $score = 0
 foreach ($line in $lines) {
     Switch ($line.Substring(2,1)) {
-        "X" {
-            $score += 1 + ($points[$line.Substring(0,1)]+1)%3
-        }
-        "Y" {
-            $score += 3 + $points[$line.Substring(0,1)]
-        }
-        "Z" {
-            $score += 7 + ($points[$line.Substring(0,1)]%3)
-        }
+        "X" {   $score += 1 + ($points[$line.Substring(0,1)]+1)%3   }
+        "Y" {   $score += 3 + $points[$line.Substring(0,1)]         }
+        "Z" {   $score += 7 + ($points[$line.Substring(0,1)]%3)     }
     }
 }
 $score

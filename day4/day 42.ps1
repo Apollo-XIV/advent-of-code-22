@@ -1,18 +1,6 @@
 $lines = Get-Content "day4/input.txt"
 $total = 0
 
-<#
-
-a1 < b1 and a2 > b1
-or
-b1 < a1 and b2 > b1
-or
-a2 > b2 and a1 < b2
-or 
-b2 > a2 and b1 < a2
-
-#>
-
 foreach ($line in $lines) {
     $a1 = $line -split ","
     $b = $a1[1] -split "-"
@@ -27,3 +15,15 @@ foreach ($line in $lines) {
 }
 
 Write-Host $total
+
+<#
+
+a1 < b1 and a2 > b1
+or
+b1 < a1 and b2 > b1
+or
+a2 > b2 and a1 < b2
+or 
+b2 > a2 and b1 < a2
+
+#>

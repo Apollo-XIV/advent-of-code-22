@@ -1,13 +1,3 @@
-<#
-
-check if human wins
-A = X = Rock        = 1
-B = Y = Paper       = 2
-C = Z = Scissors    = 3
-
-#>
-
-
 $points = @{
     "A" = 1;
     "X" = 1;
@@ -28,3 +18,12 @@ foreach ($line in $lines) {
     }
 }
 $human
+
+<#
+
+check if human wins
+A = X = Rock        = 1
+B = Y = Paper       = 2
+C = Z = Scissors    = 3
+
+#>
