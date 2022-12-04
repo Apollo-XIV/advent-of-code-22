@@ -8,10 +8,8 @@ function numerify($letter) {
 }
 
 function fndCmn($backpack) {
-    $comp1 = $backpack.ToCharArray(0,$($backpack.Length/2))
-    $comp2 = $backpack.ToCharArray($backpack.Length/2,$backpack.Length/2)
-    foreach ($item in $comp1) {
-        foreach($item2 in $comp2) {
+    foreach ($item in $backpack.ToCharArray(0,$($backpack.Length/2))) {
+        foreach($item2 in $backpack.ToCharArray($backpack.Length/2,$backpack.Length/2)) {
             if ([byte][char]$item -eq [byte][char]$item2) {
                 return $item
             }
