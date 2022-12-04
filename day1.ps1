@@ -1,7 +1,8 @@
-$lines = Get-Content "day1/PZLinput.txt"
+$lines = Get-Content "inputs/day1.txt"
 $new = @(0)
 $all = @()
 
+# PART 1 & 2
 foreach ($line in $lines) {
     if ($line -ne "") {
         $new[0] += [Int]$line
@@ -12,7 +13,7 @@ foreach ($line in $lines) {
 }
 
 $all = $all | Sort-Object -Descending
-Write-Host $all[0] $all[1] $all[2]
+Write-Host $all[0..2] ($all[0..2] | ForEach-Object {$sum += $_})
 
 <#
 
