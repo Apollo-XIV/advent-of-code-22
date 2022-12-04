@@ -1,26 +1,23 @@
-$inpData = Get-Content "day1\PZLinput.txt"
-$max = 0
-$2max = 0
-$3max = 0
-$total = 0
-Foreach ($line in $inpData) {
+$lines = Get-Content "day1/PZLinput.txt"
+$new = @(0)
+$all = @()
+
+foreach ($line in $lines) {
     if ($line -ne "") {
-        $total += [Int]$line
-    }
-    else {
-        if ($total -ge $max) {
-            $3max = $2max
-            $2max = $max
-            $max = $total
-        } elseif ($total -ge $2max) {
-            $3max = $2max
-            $2max = $total
-        } elseif ($total -ge $3max) {
-            $3max = $total
-        }
-        $total = 0
+        $new[0] += [Int]$line
+    } else {
+        $all += $new
+        $new = @(0)
     }
 }
-# works fine
-$part2 = $max + $2max + $3max
-Write-Host $("Day 1!`nPart 1: {0}`nPart 2: {1}" -f [String]$max, [String]$part2)
+
+$all = $all | Sort-Object -Descending
+Write-Host $all[0] $all[1] $all[2]
+
+<#
+
+add every sum to a list
+sort list
+grab max value(s)
+
+#>
