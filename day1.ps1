@@ -13,8 +13,7 @@ foreach ($line in $lines) {
 }
 
 $all = $all | Sort-Object -Descending
-Write-Host $all[0..2] ($all[0..2] | ForEach-Object {$sum += $_})
-
+Write-Host $all[0..2] ($all[0..2] | ForEach-Object {$sum += $_}) $sum
 <#
 
 add every sum to a list
