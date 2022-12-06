@@ -30,7 +30,7 @@ function Move-9001($x, $a, $b) {
     return @(($a.Substring(0, $a.Length - $x)), ($b + $a.Substring($a.Length - $x, $x)))
 }
 
-$lines = Get-Content "advent-of-code-22/inputs/day5.txt"
+$lines = Get-Content "inputs/day5.txt"
 $stacks = Read-Input $lines
 
 for ($i = 10; $i -lt $lines.Length; $i++) {
