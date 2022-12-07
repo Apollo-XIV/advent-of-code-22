@@ -1,4 +1,3 @@
-
 function Path-Gen([string[]]$path) {
     return (($path -join '/'))
 }
