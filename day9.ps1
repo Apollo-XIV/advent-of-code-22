@@ -4,70 +4,56 @@ $moves = Get-Content "inputs/day9.txt"
 # tracker = list of tail positions
 
 
+function main($part) {
+    $tracker = @{}
+    $rope = if($part -eq 1) {@(@(0,0),@(0,0))} else {@(@(0,0),@(0,0),@(0,0),@(0,0),@(0,0),@(0,0),@(0,0),@(0,0),@(0,0),@(0,0))}
+    $in = [string]$rope[$rope.Length-1][0] + " " + [string]$rope[$rope.Length-1][1]
+    $tracker.add($in, 0)
 
-$tracker = @{}
-$tail = @(0,0)
-$head = @(0,0)
-$in = [string]$tail[0] + " " + [string]$tail[1]
-$tracker.add($in, 0)
+    foreach ($move in $moves) {
+        for($i = [Int]$move.Substring(2,($move.Length - 2)); $i -gt 0; $i--) {
+            switch ($move.Substring(0,1)) {
+                "U" {$rope[0][1] += 1}
+                "D" {$rope[0][1] -= 1}
+                "L" {$rope[0][0] -= 1}
+                "R" {$rope[0][0] += 1}
+            }
 
-$directions = @{
-    "U" = @(0,-1)
-    "D" = @(0,1)
-    "L" = @(1,0)
-    "R" = @(-1,0)
-}
+            for ($j=1; $j -lt $rope.Length; $j++){
+                <#
+                
+                if a and b
+                if not a
+                if not b
+                else
 
-foreach ($move in $moves) {
-    for($i = [Int]$move.Substring(2,($move.Length - 2)); $i -gt 0; $i--) {
-        switch ($move.Substring(0,1)) {
-            "U" {$head[1] += 1}
-            "D" {$head[1] -= 1}
-            "L" {$head[0] -= 1}
-            "R" {$head[0] += 1}
-        }
+                alt:
+                - if x.difference -gt 1 move x closer
+                - if y.difference -gt 1 move x closer
+                
+                #>
+                $x = if (([Math]::Abs($rope[$j-1][0] - $rope[$j][0])) -gt 1) {$true} else {$false}
+                $y = if (([Math]::Abs($rope[$j-1][1] - $rope[$j][1])) -gt 1) {$true} else {$false}
+                if ($x -and $y) {
+                    $rope[$j][0] = [Int]($rope[$j][0] + $rope[$j-1][0])/2
+                    $rope[$j][1] = [Int]($rope[$j][1] + $rope[$j-1][1])/2
+                } elseif ($x) {
+                    $rope[$j][0] = [Int]($rope[$j][0] + $rope[$j-1][0])/2
+                    $rope[$j][1] = $rope[$j-1][1]
+                } elseif ($y) {
+                    $rope[$j][1] = [Int]($rope[$j][1] + $rope[$j-1][1])/2
+                    $rope[$j][0] = $rope[$j-1][0]
+                }
+                
+            }
 
-        if ((([Math]::Abs($head[0] - $tail[0])) -gt 1) -or
-            (([Math]::Abs($head[1] - $tail[1])) -gt 1)) {
-                $tail[0] = $head[0] + $directions[$move.Substring(0,1)][0]
-                $tail[1] = $head[1] + $directions[$move.Substring(0,1)][1]
-                Write-Host $tracker.Count
-                $in = [string]$tail[0] + " " + [string]$tail[1]
-                try {$tracker.add($in, 0)} catch {}
+            $in = [string]$rope[$rope.Length-1][0] + " " + [string]$rope[$rope.Length-1][1]
+            if (-not $tracker.ContainsKey($in)) {$tracker.add($in,0)}
         }
 
     }
 
+    Write-Host $tracker.Count
 }
-Write-Host $tracker.Count
-<#
-
-alternatively, track wherever the tail goes, add to array, calc final score
-
-......
-......
-......
-..H...
-......
-
-......
-......
-..H...
-..T...
-......
-
-......
-..H...
-..T..
-..S...
-......
-
-..H...
-..T...
-......
-..S...
-......
-
-
-
-#>
+main(1)
+main(2)
