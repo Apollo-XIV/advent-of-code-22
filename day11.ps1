@@ -5,6 +5,8 @@ class Monkey {
     [Int]$pass
     [Int]$fail
     [Int]$inspects = 0
+    [Int]$modulo
+    [Int]$part
     
     Monkey([Int[]]$items, [String[]]$op, [Int]$test, [Int]$pass, [Int]$fail) {
         $this.items = [System.Collections.ArrayList]$items
@@ -19,12 +21,14 @@ class Monkey {
     }
     [void]inspect(){
         $this.inspects += 1
-        if ($this.op[0] -eq 'old') {$this.op = $this.items[0]}
-        if ($this.op[2] -eq 'old') {$this.op = $this.items[0]}
+        $operation = @(0,0)
+        $operation[0] = if ($this.op[0] -eq 'old') {$this.items[0]} else {$this.op[0]}
+        $operation[1] = if ($this.op[2] -eq 'old') {$this.items[0]} else {$this.op[2]}
         switch ($this.op[1]) {
-            '*' {$this.items[0] = [Math]::Floor(($this.op[0] * $this.op[2])/3)}
-            '+' {$this.items[0] = [Math]::Floor(($this.op[0] + $this.op[2])/3)}
+            '*' {$this.items[0] = ([Int]$operation[0] * [Int]$operation[1])}
+            '+' {$this.items[0] = ([Int]$operation[0] + [Int]$operation[1])}
         }
+        $this.items[0] = if ($this.part -eq 2) {$this.items[0] % $this.modulo} else {[Math]::Floor($this.items[0] / 3)}
     }
     [Int[]]testprog(){
         $temp = $this.items[0].psobject.copy()
@@ -73,16 +77,30 @@ function parseMonkeys($file) {
     return $monkeys
 }
 
-$monkeys = parseMonkeys("inputs/day11.txt")
-
-for($j=0; $j -lt 20; $j++) {
-    Write-Host "he"
-    for ($i=0; $i -lt $monkeys.Length ; $i++) {
-        foreach($item in $monkeys[$i].around()) {
-            $monkeys[$item[0]].add($item[1])
+function main([Int]$part) {
+    $monkeys = parseMonkeys("inputs/day11.txt")
+    $modulo=1
+    foreach($monkey in $monkeys) {
+        $modulo *= $monkey.test
+    }
+    foreach($monkey in $monkeys) {
+        $monkey.modulo = $modulo
+        $monkey.part = $part
+    }
+    $rounds = if ($part -eq 1) {20} else {10000}
+    for($j=0; $j -lt $rounds; $j++) {
+        for ($i=0; $i -lt $monkeys.Length ; $i++) {
+            foreach($item in $monkeys[$i].around()) {
+                $monkeys[$item[0]].add($item[1])
+            }
         }
     }
+    $output = [System.Collections.ArrayList]::new()
+    foreach($monkey in $monkeys) {
+        $output += $monkey.inspects
+    }
+    Write-Host (($output | sort-Object)[$monkeys.Length-1]*($output | sort-Object)[$monkeys.Length-2])
 }
-foreach($monkey in $monkeys) {
-    Write-Host $monkey.inspects
-}
+
+main(1)
+main(2)
