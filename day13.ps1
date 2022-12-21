@@ -1,7 +1,6 @@
 $lines = Get-Content "inputs/day13.txt"
 
-function parsePair($pair) {
-    $first_pair = $pair[0].ToCharArray()
+function parsePair($set) {
     <#
         seperate into list of lists and items
         return as list of lists
@@ -11,23 +10,26 @@ function parsePair($pair) {
         for each proceding [ ignore a ]
         when found an appropriate ] add anything between them to a list
     #>
-
-    $start = $first_pair.IndexOf([char]'[')+1
+    if ($set.Indexof('[')-eq-1) {
+        return $set
+    }
+    $start = $set.IndexOf([char]'[')+1
     Write-Host $start
+    
     $debt = 0
-    for($i=$start;$i-lt$first_pair.Length;$i++) {
+    for($i=$start;$i-lt$set.Length;$i++) {
         $debt
-        if (($first_pair[$i]-eq']')-and($debt -eq 0)) {
+        if (($set[$i]-eq']')-and($debt -eq 0)) {
             $end = $i
             break
-        } elseif ($first_pair[$i]-eq']') {
+        } elseif ($set[$i]-eq']') {
             $debt--
-        } elseif ($first_pair[$i]-eq'[') {
+        } elseif ($set[$i]-eq'[') {
             $debt++
         }
     }
     $out = parsePair($set[$start..$end])
-
+    return $out
 }
 
 $pairs = [System.Collections.ArrayList]::new()
@@ -39,4 +41,4 @@ foreach($pair in $pairs) {
     Write-Host $pair
 }
 
-parsePair($pairs[0])
+Write-Host parsePair($pairs[0].ToCharArray())
