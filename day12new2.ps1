@@ -77,8 +77,12 @@ function findE($TODO,$grid) {
                 continue cards
             }
 
-            if ((($card.ascii()-1) -le ($pt.ascii())) -and ($grid.get($card.getrc()).steps -eq 0)) {
+            if ((($card.ascii()+1) -ge ($pt.ascii())) -and ($grid.get($card.getrc()).steps -eq 0)) {
                 $card.steps = $pt.steps + 1
+                if ($card.value -eq 'a') {
+                    Write-Host $card.steps
+                    return
+                }
                 $TODO.Enqueue($card)            
             }
         }
@@ -86,10 +90,6 @@ function findE($TODO,$grid) {
         Write-Host "working..." $TODO.Count "|" $pt.getrc() "|" $pt.value "|" $pt.steps
         $pt.visited = $true
         $grid.set($pt)
-        if ($target.visited -eq $true) {
-            Write-Host $target.steps
-            break
-        }
     }
 }
 
@@ -111,15 +111,10 @@ for($r=0; $r -lt $grid.x.Length ; $r++){
     for($c=0; $c -lt $grid.x[$r].Length ; $c++) {
         $finder = $grid.get(@($r,$c))
         switch($finder.ascii()) {
-            83 {
-                $TODO.enqueue($finder.psobject.Copy())
-                $finder.value = 'a'
-                $finder.steps = 0
-                $grid.set($finder)
-            }
             69 {
-                $target = $finder.psobject.Copy()
+                $TODO.enqueue($finder.psobject.Copy())
                 $finder.value = 'z'
+                $finder.steps = 0
                 $grid.set($finder)
             }
         }
